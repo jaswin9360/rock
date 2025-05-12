@@ -1,5 +1,4 @@
-const jwt = require('jsonwebtoken');
-const users = require("../mongoose");
+
 const bcrypt = require("bcrypt")
 const detail = require("../mongodb")
 
@@ -8,6 +7,12 @@ const detail = require("../mongodb")
   const user = await detail.find({},{password:1,username:1,_id:0})
    res.send(user)
 }
+
+
+const home2 =async (req,res)=>{
+    const user = await detail.find({},{username:1,_id:0})
+     res.send(user)
+  }
 
 
 const register = async(req,res)=>{
@@ -37,12 +42,15 @@ const login = async (req,res)=>{
         if(!userExist){
           return   res.json({message:"User Not Found" })
         }
-        if(password===userExist.password && username ===userExist.username){
+        else if(password===userExist.password && username ===userExist.username){
          return res.send({message:"Login Successfully"})
      }
-     const compare = await bcrypt.compare(password,detail.password)
+    
+     const compare = await bcrypt.compare(detail.password,password)
      console.log(compare)
     res.send({message:"Invalid Credentials"})
+     
+     
     }
     catch(err){
         res.send(err)
@@ -51,4 +59,4 @@ const login = async (req,res)=>{
 }
 
  
-module.exports = {home,login,register}
+module.exports = {home,login,register,home2}
